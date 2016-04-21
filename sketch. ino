@@ -1,0 +1,64 @@
+int DS_pin = 8;
+int STCP_pin = 9;
+int SHCP_pin = 10;
+int buttonPin1 = 11;
+boolean registers[5];
+int button1Value;
+ 
+void setup()
+{
+ pinMode(DS_pin,OUTPUT);
+ pinMode(STCP_pin,OUTPUT);
+ pinMode(SHCP_pin,OUTPUT);
+ pinMode(buttonPin1, INPUT);
+ writeReg();
+}
+ 
+void writeReg()
+{
+  digitalWrite(STCP_pin, LOW);
+   
+  for (int i=0; i<=4; i++)
+  {
+    digitalWrite(SHCP_pin, LOW);
+    digitalWrite(DS_pin, registers[i] );
+    digitalWrite(SHCP_pin, HIGH);
+  }
+   
+  digitalWrite(STCP_pin, HIGH);
+  delay(100);
+}
+ 
+void loop()
+{
+ button1Value = digitalRead(buttonPin1);
+ if(button1Value == HIGH){
+     for(int i=4; i>=0; i--)
+     {
+      registers[i] = HIGH;
+      writeReg();
+     }
+     
+     for(int i=0; i<=4; i++)
+     {
+      registers[i] = LOW;
+      writeReg();
+     }
+ }
+ else if (button1Value == LOW){
+     for(int i=0; i<=4; i++)
+     {
+      registers[i] = HIGH;
+      writeReg();
+     }
+   
+     for(int i=4; i>=0; i--)
+     {
+      registers[i] = LOW;
+      writeReg();
+     }
+ }
+
+ }
+
+//reference:http://cankavaloglu.blogspot.com/2015/02/digital-drawed-circuit.html
